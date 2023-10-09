@@ -31,4 +31,13 @@ const bmiCalculator = (height: number, weight: number): string => {
   }
 }
 
-console.log(bmiCalculator(180, 74))
+try {
+  const { height, weight } = parseArguments(process.argv);
+  console.log(bmiCalculator(height, weight))
+} catch (error: unknown) {
+  if (error instanceof Error) {
+    console.log(error.message)
+  } else {
+    console.log('Unknown error')
+  }
+}
