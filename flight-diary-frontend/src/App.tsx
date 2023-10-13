@@ -92,10 +92,3 @@ const App = () => {
 }
 
 export default App;
-
-/*
-date: <input value={date} type="date" onChange={(event) => setDate(event.target.value)} /><br />
-visibility: <input value={visibility} onChange={(event) => setVisibility(event.target.value)} /><br />
-weather: <input value={weather} onChange={(event) => setWeather(event.target.value)} /><br />
-comment: <input value={comment} onChange={(event) => setComment(event.target.value)} /><br />
-*/
