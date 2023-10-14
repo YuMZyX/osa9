@@ -47,6 +47,16 @@ interface OccupationalHealthcareEntry extends BaseEntry {
   }
 }
 
+export interface Discharge {
+  date: string;
+  criteria: string;
+}
+
+export interface SickLeave {
+  startDate: string;
+  endDate: string;
+}
+
 export interface Diagnosis {
   code: string;
   name: string;
