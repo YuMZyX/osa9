@@ -6,7 +6,7 @@ const toNewEntry = (object: unknown): EntryWithoutId => {
   }
 
   if ('description' in object && 'date' in object && 'specialist' in object && 
-  'diagnosisCodes' in object && 'healthCheckRating' in object) {
+   'healthCheckRating' in object) {
     const newEntry: EntryWithoutId = {
       description: parseDescription(object.description),
       date: parseDate(object.date),
@@ -17,7 +17,7 @@ const toNewEntry = (object: unknown): EntryWithoutId => {
     };
     return newEntry;
   } else if ('description' in object && 'date' in object && 'specialist' in object && 
-  'diagnosisCodes' in object && 'discharge' in object) {
+  'discharge' in object) {
     const newEntry: EntryWithoutId = {
       description: parseDescription(object.description),
       date: parseDate(object.date),
@@ -28,14 +28,14 @@ const toNewEntry = (object: unknown): EntryWithoutId => {
     };
     return newEntry;
   } else if ('description' in object && 'date' in object && 'specialist' in object && 
-  'diagnosisCodes' in object && 'employerName' in object && 'sickLeave' in object) {
+  'employerName' in object) {
     const newEntry: EntryWithoutId = {
       description: parseDescription(object.description),
       date: parseDate(object.date),
       specialist: parseSpecialist(object.specialist),
       diagnosisCodes: parseDiagnosisCodes(object),
       employerName: parseEmployerName(object.employerName),
-      sickLeave: parseSickLeave(object.sickLeave),
+      sickLeave: parseSickLeave(object),
       type: 'OccupationalHealthcare'
     };
     return newEntry;
@@ -45,14 +45,14 @@ const toNewEntry = (object: unknown): EntryWithoutId => {
 };
 
 const parseDescription = (name: unknown): string => {
-  if (!isString(name)) {
+  if (!isString(name) || name === '') {
     throw new Error('Incorrect or missing description');
   }
   return name;
 };
 
 const parseEmployerName = (name: unknown): string => {
-  if (!isString(name)) {
+  if (!isString(name) || name === '') {
     throw new Error('Incorrect or missing employer name');
   }
   return name;
@@ -65,15 +65,15 @@ const parseDischarge = (discharge: unknown): Discharge => {
   return discharge;
 };
 
-const parseSickLeave = (sickLeave: unknown): SickLeave => {
-  if (!isSickLeave(sickLeave)) {
-    throw new Error('Incorrect or missing sick leave: ' + sickLeave);
-  } 
-  return sickLeave;
+const parseSickLeave = (object: unknown): SickLeave => {
+  if (!object || typeof object !== 'object' || !('sickLeave' in object)) {
+    throw new Error('Incorrect or missing sickLeave dates');
+  }
+  return object.sickLeave as SickLeave;
 };
 
 const parseSpecialist = (name: unknown): string => {
-  if (!isString(name)) {
+  if (!isString(name) || name === '') {
     throw new Error('Incorrect or missing specialist');
   }
   return name;
@@ -104,32 +104,19 @@ const isDischarge = (param: unknown): param is Discharge => {
   if (typeof param != "object") {
     throw new Error(`Unexpected type: ${typeof param}`);
   } else if (param == null) {
-    throw new Error("Unexpected value: null");
-  } else if (!("criteria" in param)) {
-    throw new Error("Missing property: criteria");
-  } else if (typeof param.criteria != "string") {
+    throw new Error('Unexpected value: null');
+  } else if (!('criteria' in param)) {
+    throw new Error('Missing property: criteria');
+  } else if (typeof param.criteria != 'string') {
     throw new Error(`Unexpected type: ${typeof param.criteria}`);
-  } else if (!("date" in param)) {
-    throw new Error("Missing property: date");
-  } else if (typeof param.date != "string") {
+  } else if (!('date' in param)) {
+    throw new Error('Missing property: date');
+  } else if (typeof param.date != 'string') {
     throw new Error(`Unexpected type: ${typeof param.date}`);
-  }
-  return true;
-};
-
-const isSickLeave = (param: unknown): param is SickLeave => {
-  if (typeof param != "object") {
-    throw new Error(`Unexpected type: ${typeof param}`);
-  } else if (param == null) {
-    throw new Error("Unexpected value: null");
-  } else if (!("startDate" in param)) {
-    throw new Error("Missing property: criteria");
-  } else if (typeof param.startDate != "string") {
-    throw new Error(`Unexpected type: ${typeof param.startDate}`);
-  } else if (!("endDate" in param)) {
-    throw new Error("Missing property: date");
-  } else if (typeof param.endDate != "string") {
-    throw new Error(`Unexpected type: ${typeof param.endDate}`);
+  } else if (param.date === '') {
+    throw new Error('Incorrect or missing discharge date');
+  } else if (param.criteria === '') {
+    throw new Error('Incorrect or missing discharge criteria');
   }
   return true;
 };
