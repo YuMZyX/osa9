@@ -1,4 +1,4 @@
-# Full Stack Open - Part 9
+# Full Stack Open - Part 9 (TypeScript)
 
 1. Background and introduction to TypeScript
 
